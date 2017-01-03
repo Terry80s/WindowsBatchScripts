@@ -45,7 +45,7 @@
 
 .grid {
   display:flex;
-  width:3000px;
+  width:4000px; /* .cell : 500px * 8 Languages */
   border-left:1px solid #cccccc;
 }
 
@@ -74,6 +74,10 @@
   content:"PowerShell";
 }
 
+.cell.bash::before {
+  content:"Bash";
+}
+
 .cell.vbs::before {
   content:"VBScript";
 }
@@ -90,6 +94,10 @@
   content:"JScript.NET";
 }
 
+.cell.csc::before {
+  content:"C#";
+}
+
 .cell code {
   overflow:scroll;
   height:10rem;
@@ -99,6 +107,7 @@
     <script src="highlight.js"></script>
     <script>
 
+// https://highlightjs.readthedocs.io/en/latest/css-classes-reference.html
 hljs.initHighlightingOnLoad();
 
     </script>
@@ -113,6 +122,152 @@ hljs.initHighlightingOnLoad();
         <p>「あの処理はあの言語でどう書くの？」のまとめ。</p>
         <section>
           <div class="info">
+            <h2>Call From Windows Batch</h2>
+            <p>Windows Batch から各スクリプトを呼び出す方法</p>
+          </div>
+          <div class="codes">
+            <div class="grid">
+              <div class="cell dos">
+                <pre><code class="dos">Rem 同プロセスで呼ぶ
+Call "script.bat"
+
+Rem 別プロセスで呼ぶ
+Start "script.bat"</code></pre>
+              </div>
+              <div class="cell ps">
+                <pre><code class="dos">PowerShell.exe -ExecutionPolicy RemoteSigned -F "script.ps1"</code></pre>
+              </div>
+              <div class="cell bash">
+                <pre><code class="dos">Rem Msys の場合
+"C:\msys\bin\sh.exe" --login -i "script.sh"</code></pre>
+              </div>
+              <div class="cell vbs">
+                <pre><code class="dos">CScript //NoLogo //E:VBScript "script.vbs"</code></pre>
+              </div>
+              <div class="cell js">
+                <pre><code class="dos">CScript //NoLogo //E:JScript "script.js"</code></pre>
+              </div>
+              <div class="cell vbc">
+                <pre><code class="dos">Rem コンパイルした exe ファイルが存在していたら削除する
+If Exist "script.exe" ( Del "script.exe" )
+
+Rem コンパイラでコンパイルする
+"C:\Windows\Microsoft.NET\Framework\v4.0.30319\vbc.exe" "script.vb"
+
+Rem コンパイルできたら実行する
+If "%ERRORLEVEL%" == "0" ( "script.exe" )</code></pre>
+              </div>
+              <div class="cell jsc">
+                <pre><code class="dos">Rem コンパイルした exe ファイルが存在していたら削除する
+If Exist "script.exe" ( Del "script.exe" )
+
+Rem コンパイラでコンパイルする
+"C:\Windows\Microsoft.NET\Framework\v4.0.30319\jsc.exe" "script.js"
+
+Rem コンパイルできたら実行する
+If "%ERRORLEVEL%" == "0" ( "script.exe" )</code></pre>
+              </div>
+              <div class="cell csc">
+                <pre><code class="dos">Rem コンパイルした exe ファイルが存在していたら削除する
+If Exist "script.exe" ( Del "script.exe" )
+
+Rem コンパイラでコンパイルする
+"C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe" "script.cs"
+
+Rem コンパイルできたら実行する
+If "%ERRORLEVEL%" == "0" ( "script.exe" )</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="info">
+            <h2>Template</h2>
+            <p>オレオレテンプレート。</p>
+          </div>
+          <div class="codes">
+            <div class="grid">
+              <div class="cell dos">
+                <pre><code class="dos">@Echo Off
+
+Rem ココにコード
+
+Pause
+Exit /b</code></pre>
+              </div>
+              <div class="cell ps">
+                <pre><code class="ps"># ココにコード
+
+Read-Host Please Enter key to continue...
+Exit</code></pre>
+              </div>
+              <div class="cell bash">
+                <pre><code class="bash">#!/bin/bash
+
+# ココにコード
+
+read -p "Please any key to continue... " -n 1
+exit</code></pre>
+              </div>
+              <div class="cell vbs">
+                <pre><code class="vbs">Option Explicit
+
+' ココにコード
+
+WScript.Echo("Please Enter key to continue...")
+WScript.StdIn.ReadLine()
+WScript.Quit()</code></pre>
+              </div>
+              <div class="cell js">
+                <pre><code class="js">// ココにコード
+
+WScript.Echo("Please Enter key to continue...");
+WScript.StdIn.ReadLine();
+WScript.Quit();</code></pre>
+              </div>
+              <div class="cell vbc">
+                <pre><code class="vbnet">Imports System
+
+Module Module1
+  Sub Main()
+    ' ココにコード
+    
+    Console.WriteLine("Please Enter key to continue...")
+    Console.ReadKey()
+    Environment.Exit(0)
+  End Sub
+End Module</code></pre>
+              </div>
+              <div class="cell jsc">
+                <pre><code class="js">import System;
+
+// 即時関数は必須ではないけど…
+(function() {
+  // ココにコード
+  
+  Console.WriteLine("Please Enter key to continue...");
+  Console.ReadKey();
+  Environment.Exit(0);
+})();</code></pre>
+              </div>
+              <div class="cell csc">
+                <pre><code class="cs">using System;
+
+class CSharp {
+  public static void Main() {
+    // ココにコード
+    
+    Console.WriteLine("Please Enter key to continue...");
+    Console.ReadKey();
+    Environment.Exit(0);
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div class="info">
             <h2>Echo</h2>
             <p>コンソールに文字列を出力する。</p>
           </div>
@@ -124,30 +279,40 @@ Echo ほげピヨ</code></pre>
               </div>
               <div class="cell ps">
                 <pre><code class="ps">Write-Output FooBar
-Write-Output ほげピヨ</code></pre>
+Write-Host ほげピヨ</code></pre>
+              </div>
+              <div class="cell bash">
+                <pre><code class="bash">echo FooBar
+echo ほげピヨ</code></pre>
               </div>
               <div class="cell vbs">
-                <pre><code class="vbs">WScript.Echo "FooBar"
-WScript.Echo "ほげピヨ"</code></pre>
+                <pre><code class="vbs">WScript.Echo("FooBar")
+Wscript.StdOut.Write("ほげピヨ")
+
+' カッコがなくても OK
+WScript.Echo "FooBar"
+Wscript.StdOut.Write "ほげピヨ"</code></pre>
               </div>
               <div class="cell js">
                 <pre><code class="js">WScript.Echo("FooBar");
-WScript.Echo("ほげピヨ");</code></pre>
+Wscript.StdOut.Write("ほげピヨ");</code></pre>
               </div>
               <div class="cell vbc">
                 <pre><code class="vbnet">Imports System
 
-Module Module1
-  Sub Main()
-    Console.WriteLine("FooBar")
-    Console.WriteLine("ほげピヨ")
-  End Sub
-End Module</code></pre>
+Console.WriteLine("FooBar")
+Console.WriteLine("ほげピヨ")</code></pre>
               </div>
               <div class="cell jsc">
                 <pre><code class="js">import System;
 
 print("FooBar");
+Console.WriteLine("ほげピヨ");</code></pre>
+              </div>
+              <div class="cell csc">
+                <pre><code class="cs">using System;
+
+Console.WriteLine("FooBar");
 Console.WriteLine("ほげピヨ");</code></pre>
               </div>
             </div>
@@ -164,10 +329,15 @@ Console.WriteLine("ほげピヨ");</code></pre>
               <div class="cell dos">
                 <pre><code class="dos">Ping localhost -n 4
 Timeout 3
+
+Rem sleep.exe を持っていれば
 Sleep 3</code></pre>
               </div>
               <div class="cell ps">
                 <pre><code class="ps">Start-Sleep -s 3</code></pre>
+              </div>
+              <div class="cell bash">
+                <pre><code class="bash">sleep 3</code></pre>
               </div>
               <div class="cell vbs">
                 <pre><code class="vbs">WScript.Sleep(3000)</code></pre>
@@ -182,6 +352,11 @@ System.Threading.Thread.Sleep(3000)</code></pre>
               </div>
               <div class="cell jsc">
                 <pre><code class="js">import System;
+
+System.Threading.Thread.Sleep(3000);</code></pre>
+              </div>
+              <div class="cell csc">
+                <pre><code class="cs">using System;
 
 System.Threading.Thread.Sleep(3000);</code></pre>
               </div>
@@ -202,6 +377,9 @@ Rem =&gt; 続行するには何かキーを押してください . . .</code></p
               <div class="cell ps">
                 <pre><code class="ps">Read-Host "続行するには Enter キーを押してください。"</code></pre>
               </div>
+              <div class="cell bash">
+                <pre><code class="bash">read -p "続行するには何かキーを押してください。" -n 1</code></pre>
+              </div>
               <div class="cell vbs">
                 <pre><code class="vbs">WScript.Echo "続行するには Enter キーを押してください。"
 WScript.StdIn.ReadLine</code></pre>
@@ -218,6 +396,12 @@ Console.ReadLine()</code></pre>
               </div>
               <div class="cell jsc">
                 <pre><code class="js">import System;
+
+Console.WriteLine("続行するには Enter キーを押してください。");
+Console.ReadLine();</code></pre>
+              </div>
+              <div class="cell csc">
+                <pre><code class="cs">using System;
 
 Console.WriteLine("続行するには Enter キーを押してください。");
 Console.ReadLine();</code></pre>
@@ -243,6 +427,9 @@ Console.ReadLine();</code></pre>
 &lt;# 複数行コメント
 終わり #&gt;</code></pre>
               </div>
+              <div class="cell bash">
+                <pre><code class="ps"># コメント</code></pre>
+              </div>
               <div class="cell vbs">
                 <pre><code class="vbs">' シングルクォートでコメント</code></pre>
               </div>
@@ -265,13 +452,21 @@ Console.ReadLine();</code></pre>
 
 /// ドキュメントコメント</code></pre>
               </div>
+              <div class="cell csc">
+                <pre><code class="cs">// 1行コメント
+
+/* 複数行コメント
+終わり */
+
+/// ドキュメントコメント</code></pre>
+              </div>
             </div>
           </div>
         </section>
       </section>
     </main>
     <footer id="footer">
-      <div id="copyright"><small>Copyright &copy; 2016 <a href="../index.html">Neo's GitHub Pages</a>, All rights reserved.</small></div>
+      <div id="copyright"><small>Copyright &copy; 2016-2017 <a href="../index.html">Neo's GitHub Pages</a>, All rights reserved.</small></div>
     </footer>
   </body>
 </html>
